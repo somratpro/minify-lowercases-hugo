@@ -1,0 +1,19 @@
+{{ define "main" }}
+
+<!-- checking blog -->
+{{ if or (eq .Section "post") (eq .Section "posts") (eq .Section "blog") (eq .Section "blogs") (eq .Section "news") (eq .Section "categories") (eq .Section "tags") }}
+
+<!-- comments -->
+{{ if .Site.DisqusShortname }}
+<div class="mt-5">
+  {{ template "_internal/disqus.html" . }}
+</div>
+{{ end }}
+
+<!-- regular page -->
+{{ else }}
+{{ .Render "default" }}
+{{ end }}
+<!-- /regular page -->
+
+{{ end }}

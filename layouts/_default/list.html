@@ -1,0 +1,61 @@
+{{ define "main" }}
+
+<!-- widget -->
+{{ $widget:= site.Params.widgets.sidebar }}
+{{- partialCached "widgets/widget-wrapper" ( dict "Widgets" $widget "Scope" . ) -}}
+
+<!-- checking blog -->
+{{ if or (eq .Section "post") (eq .Section "posts") (eq .Section "blog") (eq .Section "blogs") (eq .Section "news") (eq .Section "categories") (eq .Section "tags") }}
+
+
+<!-- start range -->
+{{ $paginator:= .Paginate .Data.Pages }}
+{{ range $paginator.Pages }}
+
+<!-- single image -->
+{{ $imagePath:= .Params.image }}
+{{ if fileExists (add `assets/` $imagePath) }}
+{{ $image:= resources.Get $imagePath }}
+{{ $imageResize:= $image.Fill "300x400" }}
+{{ .Scratch.Set "image" $imageResize.RelPermalink }}
+{{ else }}
+{{ .Scratch.Set "image" ($imagePath | relURL) }}
+{{ end }}
+<img loading="lazy" src="{{.Scratch.Get `image`}}" alt="{{ .Title }}" class="img-fluid">
+
+
+{{ $imagePath:= .Params.image }}
+{{ $image:= resources.Get $imagePath }}
+{{ $imageSM:= $image.Fill "400x300" }}
+{{ $imageLG:= $image.Fill "1200x800" }}
+<picture>
+  <source srcset="{{ $imageSM.RelPermalink }}" media="(max-width: 767px)">
+  <source srcset="{{ $imageLG.RelPermalink }}" media="(min-width: 768px)">
+  <source srcset="{{ $image.RelPermalink }}">
+  <img src="{{$image.RelPermalink}}" class="card-img" loading="lazy" alt="post-thumb">
+</picture>
+
+
+<!-- multiple image -->
+{{ range .Params.images }}
+{{ if fileExists (add `assets/` .) }}
+{{ $image:= resources.Get . }}
+{{ $imageResize:= $image.Fill "700x330" }}
+<img data-src="{{ $imageResize.RelPermalink }}" class="card-img lozad" alt="post-thumb">
+{{ else }}
+<img data-src="{{ . | relURL }}" class="card-img lozad" alt="post-thumb">
+{{ end }}
+{{ end }}
+
+
+{{ end }}
+<!-- end of range -->
+{{ template "_internal/pagination.html" . }}
+
+<!-- regular page -->
+{{ else }}
+{{ .Render "default" }}
+{{ end }}
+<!-- /regular page -->
+
+{{ end }}

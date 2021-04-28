@@ -1,0 +1,40 @@
+{{ define "main" }}
+
+<!-- content unordered list style with fontawesome js -->
+<style>
+  ul li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 10px;
+    list-style-type: none;
+  }
+
+  ul li::before {
+    font-family: "{{ with site.Params.variables }} {{.icon_font}} {{ end }}";
+    font-weight: 900;
+    display: none;
+    content: "\f002";
+  }
+
+  ul li svg {
+    position: absolute;
+    left: 0;
+    top: 6px;
+    font-size: 13px;
+  }
+</style>
+
+<section class="py-5 my-5">
+  <div class="container">
+    <div class="content">
+      <ul>
+        <li>pseudo-elements icon test</li>
+        <li>pseudo-elements icon test</li>
+        <li>pseudo-elements icon test</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+
+{{ end }}
